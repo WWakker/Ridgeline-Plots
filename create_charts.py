@@ -25,7 +25,7 @@ fig, ax = ridgeline(df,
                     note=(0.043, 0.05, "Data: RIVM"),
                     cmap='afmhot',
                     alpha=.55,
-                    linspace=[0,.6])
+                    linspace=(0,.6))
 
 fig.savefig('./cases.png', dpi=200)
 
@@ -42,7 +42,7 @@ fig, ax = ridgeline(df,
                     note=(0.043, 0.05, "Data: RIVM"),
                     cmap='afmhot',
                     alpha=.55,
-                    linspace=[0,.6])
+                    linspace=(0,.6))
 
 fig.savefig('./deaths.png', dpi=200)
 
@@ -59,6 +59,6 @@ fig, ax = ridgeline(df,
                     note=(0.043, 0.05, "Data: RIVM"),
                     cmap='afmhot',
                     alpha=.55,
-                    linspace=[0,.6])
+                    linspace=(0,.6))
 
 fig.savefig('./hospitalizations.png', dpi=200)

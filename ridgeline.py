@@ -26,7 +26,7 @@ def ridgeline(dataframe,
         Parameters:
             dataframe (pd.DataFrame): pandas dataframe with time column, group column
                                       and value column
-            col_time        (string): time column name
+            col_time        (string): time column name, needs to be pd.datetime
             col_group       (string): group column name
             col_value       (string): value column name
             title           (string): chart title
