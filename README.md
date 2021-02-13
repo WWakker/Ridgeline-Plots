@@ -1,5 +1,5 @@
 # Ridgeline Plots
-## Create ridgeline plots for grouped data over time
+Create ridgeline plots for grouped data over time
 
 ![](https://raw.githubusercontent.com/WWakker/Ridgeline-Plots/master/Charts/cases.png)
 
