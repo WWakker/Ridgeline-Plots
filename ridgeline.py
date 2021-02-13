@@ -43,7 +43,6 @@ def ridgeline(dataframe,
             dt_format       (string): datetime format
         Returns:
             fig, ax          (tuple): matplotlib fig and ax
-    
     '''
     
     # Copy df
