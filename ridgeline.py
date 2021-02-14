@@ -16,12 +16,11 @@ def ridgeline(dataframe,
               scale=3,
               note=None,
               figsize=(12,8),
-              cmap='autumn',
+              colormap='autumn',
               alpha=.5,
               linspace=(0,1)):
     '''
     Create ridgeline plots for grouped data over time
-    
     
         Parameters:
             dataframe (pd.DataFrame): pandas dataframe with time column, group column
@@ -37,7 +36,7 @@ def ridgeline(dataframe,
             scale            (float): scale vertically to control overlap
             note             (tuple): (x, y, 'string')
             figsize          (tuple): (width, height)
-            cmap            (string): colormap from matplotlib.cm
+            colormap            (string): colormap from matplotlib.cm
             alpha            (float): set transparency 
             linspace         (tuple): set range of colormap to use; between 0 and 1
             dt_format       (string): datetime format
@@ -51,7 +50,7 @@ def ridgeline(dataframe,
     # Normalize by overall max value
     if norm == 'overall':
         df['norm'] = df[col_value].div(df[col_value].max())
-    elif norm== 'group':
+    elif norm == 'group':
         groupmax = df.groupby(col_group)[col_value].transform('max')
         df['norm'] = df[col_value].div(groupmax)
     else:
@@ -63,7 +62,7 @@ def ridgeline(dataframe,
     # Create smoothed line
     lowess = sm.nonparametric.lowess
     for group in df[col_group].unique():
-        df_sub = df.query(f'{col_group} == "{group}"')
+        df_sub = df[df[col_group] == group]
         smoothed = lowess(df_sub.norm, df_sub[col_time], is_sorted=True, return_sorted=False, frac=frac)
         df.loc[df[col_group] == group, 'smoothed_norm'] = smoothed.clip(min=0)
     
@@ -79,8 +78,8 @@ def ridgeline(dataframe,
     fig, ax = plt.subplots(figsize=figsize)
     
     # Get colormap
-    clmap = plt.get_cmap(cmap)
-    colors = iter(clmap(np.linspace(linspace[0],linspace[1],len(df.province.unique()))))
+    clmap = plt.get_cmap(colormap)
+    colors = iter(clmap(np.linspace(linspace[0],linspace[1],len(df[col_group].unique()))))
     
     # Loop over reversed group list, create area chart for each group
     group_list = df[col_group].unique().tolist()
@@ -98,7 +97,7 @@ def ridgeline(dataframe,
                         edgecolor='white')
         # Group labels
         plt.annotate(group, 
-                     xy=(df_sub[col_time].min(), df_sub.group_id.min()), 
+                     xy=(df[col_time].min(), df_sub.group_id.min()), 
                      textcoords='offset points', 
                      xytext=(-70,0))
     
