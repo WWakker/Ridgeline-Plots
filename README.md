@@ -30,7 +30,7 @@ fig, ax = ridgeline(df,
                     frac=.08,
                     scale=3,
                     note=(0.043, 0.05, "Data: RIVM"),
-                    cmap='afmhot',
+                    colormap='afmhot',
                     alpha=.55,
                     linspace=(0,.6))
 ```
