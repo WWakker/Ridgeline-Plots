@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 import matplotlib.dates as mdates
+import pandas as pd
 
 
 def ridgeline(dataframe, 
@@ -18,15 +19,16 @@ def ridgeline(dataframe,
               figsize=(12,8),
               colormap='autumn',
               alpha=.5,
-              linspace=(0,1)):
+              linspace=(0,1),
+              sort_groups=None):
     '''
     Create ridgeline plots for grouped data over time
-    
+
         Parameters:
             dataframe (pd.DataFrame): pandas dataframe with time column, group column
                                       and value column
             col_time        (string): time column name, needs to be pd.datetime
-            col_group       (string): group column name
+            col_group       (string): group column name, column dtype must be string
             col_value       (string): value column name
             title           (string): chart title
             title_loc       (string): title position
@@ -36,16 +38,17 @@ def ridgeline(dataframe,
             scale            (float): scale vertically to control overlap
             note             (tuple): (x, y, 'string')
             figsize          (tuple): (width, height)
-            colormap            (string): colormap from matplotlib.cm
+            colormap        (string): colormap from matplotlib.cm
             alpha            (float): set transparency 
             linspace         (tuple): set range of colormap to use; between 0 and 1
             dt_format       (string): datetime format
+            sort_groups       (list): sorted list of groups to include
         Returns:
             fig, ax          (tuple): matplotlib fig and ax
     '''
     
     # Copy df
-    df = dataframe.copy()
+    df = dataframe.copy()            
     
     # Normalize by overall max value
     if norm == 'overall':
@@ -67,7 +70,10 @@ def ridgeline(dataframe,
         df.loc[df[col_group] == group, 'smoothed_norm'] = smoothed.clip(min=0)
     
     # Create scaled group indicator
-    df[col_group] = df[col_group].astype('category')
+    if sort_groups is not None:
+        df[col_group] = pd.Categorical(df[col_group], sort_groups)
+    else:
+        df[col_group] = df[col_group].astype('category')
     df['group_id'] = (df[col_group].cat.codes + 1) / scale
     
     # Create columns for plotting
@@ -82,7 +88,10 @@ def ridgeline(dataframe,
     colors = iter(clmap(np.linspace(linspace[0],linspace[1],len(df[col_group].unique()))))
     
     # Loop over reversed group list, create area chart for each group
-    group_list = df[col_group].unique().tolist()
+    if sort_groups is not None:
+        group_list = sort_groups
+    else:
+        group_list = df[col_group].unique().tolist()
     group_list = group_list[::-1]
     for group in group_list:
         df_sub = df[df[col_group] == group]
@@ -109,5 +118,7 @@ def ridgeline(dataframe,
     plt.title(title, color='black',fontsize=15,fontweight='roman',loc=title_loc)
     if note is not None:
         fig.text(note[0], note[1], note[2])
+        
+    del df
         
     return fig, ax
