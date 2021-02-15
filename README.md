@@ -7,6 +7,8 @@ Create ridgeline plots for grouped data over time
 ```python
 import pandas as pd
 from ridgeline import ridgeline
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 
 # Import data
@@ -20,17 +22,22 @@ df_raw.columns= df_raw.columns.str.lower()
 df = df_raw.groupby(['date_of_publication', 'province']).sum().reset_index()
 
 # Create ridgeline plot for daily cases
-fig, ax = ridgeline(df, 
-                    col_time='date_of_publication',
-                    col_group='province',
-                    col_value='total_reported',
-                    dt_format="%b %Y",
-                    title="COVID-19: Number of new daily cases in the Netherlands                      ",
-                    norm='overall',
-                    frac=.08,
-                    scale=3,
-                    note=(0.043, 0.05, "Data: RIVM"),
-                    colormap='afmhot',
-                    alpha=.55,
-                    linspace=(0,.6))
+fig, ax = plt.subplots(figsize=(12,8))
+ax = ridgeline(df, 
+               ax=ax,
+               col_time='date_of_publication',
+               col_group='province',
+               col_value='total_reported',
+               norm='overall',
+               frac=.08,
+               scale=3,
+               colormap='afmhot',
+               alpha=.55,
+               linspace=(0,.6))
+
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
+plt.title("COVID-19: Number of new daily cases in the Netherlands                      ", 
+          color='black',fontsize=15,fontweight='roman',loc='center')
+fig.text(0.043, 0.05, "Data: RIVM")
+plt.show()
 ```
