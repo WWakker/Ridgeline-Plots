@@ -29,8 +29,8 @@ ax = ridgeline(df,
                linspace=(0,.6))
 
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
-plt.title("COVID-19: Number of new daily cases in the Netherlands                      ", 
-          color='black',fontsize=15,fontweight='roman',loc='center')
+ax.set_title("COVID-19: Number of new daily cases in the Netherlands                      ", 
+             color='black',fontsize=15,fontweight='roman',loc='center')
 fig.text(0.043, 0.05, "Data: RIVM")
 fig.savefig('./cases.png', dpi=200)
 
@@ -50,8 +50,8 @@ ax = ridgeline(df,
                linspace=(0,.6))
 
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
-plt.title("COVID-19: Number of deaths in the Netherlands             ", 
-          color='black',fontsize=15,fontweight='roman',loc='center')
+ax.set_title("COVID-19: Number of deaths in the Netherlands             ", 
+             color='black',fontsize=15,fontweight='roman',loc='center')
 fig.text(0.043, 0.05, "Data: RIVM")
 fig.savefig('./deaths.png', dpi=200)
 
@@ -70,7 +70,7 @@ ax = ridgeline(df,
                linspace=(0,.6))
 
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
-plt.title("COVID-19: Number of hospital admissions in the Netherlands              ", 
-          color='black',fontsize=15,fontweight='roman',loc='center')
+ax.set_title("COVID-19: Number of hospital admissions in the Netherlands              ", 
+             color='black',fontsize=15,fontweight='roman',loc='center')
 fig.text(0.043, 0.05, "Data: RIVM")
 fig.savefig('./hospitalizations.png', dpi=200)
