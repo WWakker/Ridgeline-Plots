@@ -1,33 +1,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
-import matplotlib.dates as mdates
 import pandas as pd
 
 
 def ridgeline(dataframe, 
+              ax,
               col_time, 
               col_group, 
               col_value,
-              dt_format,
-              title='', 
-              title_loc='center',
               norm='overall', 
               frac=.1, 
               scale=3,
-              note=None,
-              figsize=(12,8),
               colormap='autumn',
               alpha=.5,
               linspace=(0,1),
-              sort_groups=None):
+              sort_groups=None,
+              labeloffset=-70):
     '''
     Create ridgeline plots for grouped data over time
 
         Parameters:
             dataframe (pd.DataFrame): pandas dataframe with time column, group column
                                       and value column
-            col_time        (string): time column name, needs to be pd.datetime
+            col_time        (string): time column name, needs to be pd.datetime or numeric
             col_group       (string): group column name, column dtype must be string
             col_value       (string): value column name
             title           (string): chart title
@@ -43,8 +39,9 @@ def ridgeline(dataframe,
             linspace         (tuple): set range of colormap to use; between 0 and 1
             dt_format       (string): datetime format
             sort_groups       (list): sorted list of groups to include
+            labeloffset      (float): horizontal label affset
         Returns:
-            fig, ax          (tuple): matplotlib fig and ax
+            ax          (tuple): matplotlib ax
     '''
     
     # Copy df
@@ -79,9 +76,6 @@ def ridgeline(dataframe,
     # Create columns for plotting
     df['smoothed_norm_plot'] = df.smoothed_norm + df.group_id
     df['norm_plot'] = df.norm + df.group_id
-                         
-    # Create figure
-    fig, ax = plt.subplots(figsize=figsize)
     
     # Get colormap
     clmap = plt.get_cmap(colormap)
@@ -108,17 +102,16 @@ def ridgeline(dataframe,
         plt.annotate(group, 
                      xy=(df[col_time].min(), df_sub.group_id.min()), 
                      textcoords='offset points', 
-                     xytext=(-70,0))
+                     xytext=(labeloffset,0))
     
-    # Figure formatting
-    ax.axes.get_yaxis().set_visible(False)
-    plt.box(on=None)
+    # Formatting
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['left'].set_visible(False)
     ax.set_xlim([df[col_time].min(), df[col_time].max()])
-    ax.xaxis.set_major_formatter(mdates.DateFormatter(dt_format))
-    plt.title(title, color='black',fontsize=15,fontweight='roman',loc=title_loc)
-    if note is not None:
-        fig.text(note[0], note[1], note[2])
+    ax.axes.get_yaxis().set_visible(False)
         
     del df
         
-    return fig, ax
+    return ax
